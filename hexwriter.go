@@ -19,7 +19,7 @@ func NewHexWriter(w io.Writer) *HexWriter {
   }
 }
 
-func (h *HexWriter) Write(p []byte) (n int, err error) {
+func (w *HexWriter) Write(p []byte) (n int, err error) {
   if len(p) == 0 {
     return 0, nil
   }
@@ -27,13 +27,13 @@ func (h *HexWriter) Write(p []byte) (n int, err error) {
   needSize := hex.EncodedLen(len(p))
 
   //Grow if necessary
-  if cap(h.b) < needSize {
-    h.b = make([]byte, needSize)
+  if cap(w.b) < needSize {
+    w.b = make([]byte, needSize)
   }
 
-  _ = hex.Encode(h.b, p)
+  _ = hex.Encode(w.b, p)
 
-  n, err = h.w.Write(h.b)
+  n, err = w.w.Write(w.b[:needSize])
 
   return n/2, err
 }

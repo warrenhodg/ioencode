@@ -19,7 +19,7 @@ func NewHexReader(r io.Reader) *HexReader {
   }
 }
 
-func (h *HexReader) Read(p []byte) (n int, err error) {
+func (r *HexReader) Read(p []byte) (n int, err error) {
   if len(p) == 0 {
     return 0, nil
   }
@@ -27,12 +27,12 @@ func (h *HexReader) Read(p []byte) (n int, err error) {
   needSize := hex.EncodedLen(len(p))
 
   //Grow if necessary
-  if cap(h.b) < needSize {
-    h.b = make([]byte, needSize)
+  if len(r.b) < needSize {
+    r.b = make([]byte, needSize)
   }
 
-  decodeBuffer := h.b[:needSize]
-  n, errRead := h.r.Read(decodeBuffer)
+  decodeBuffer := r.b[:needSize]
+  n, errRead := r.r.Read(decodeBuffer)
   if n == 0 {
     return 0, errRead
   }
